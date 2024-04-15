@@ -6,7 +6,7 @@ const ReadRole = () => {
   const [data, setData] = useState<any[]>([]);
   const navigate = useNavigate();
   const [deleteId, setDeleteId] = useState(null);
-  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
+  const [baseUrl, SetBaseUrl] = useState("https://thay-db.vercel.app");
   const { roleName, token } = useAuth();
   const isAdmin = roleName === "admin";
 

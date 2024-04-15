@@ -11,7 +11,7 @@ const AttendanceRecord = () => {
   const [shouldFetchDefault, setShouldFetchDefault] = useState(false);
   const { token } = useAuth();
 
-  const Backend = `https://thaydb.vercel.app`;
+  const Backend = `https://thay-db.vercel.app`;
   const defaultUrl = `${Backend}/api/time`;
 
   const constructUrl = () => {

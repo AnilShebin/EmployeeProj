@@ -10,7 +10,7 @@ const PaySlip = () => {
   const pdfContainerRef = useRef<HTMLDivElement | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { token } = useAuth();
-  const Backend = "https://thaydb.vercel.app";
+  const Backend = "https://thay-db.vercel.app";
 
   const handleGenerate = () => {
     setErrorMessage(null);

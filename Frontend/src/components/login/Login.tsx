@@ -22,7 +22,7 @@ const Login: React.FC = () => {
     }
 
     try {
-      const response = await fetch('https://thaydb.vercel.app/api/auth/login', {
+      const response = await fetch('https://thay-db.vercel.app/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

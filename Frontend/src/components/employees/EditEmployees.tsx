@@ -11,11 +11,11 @@ const EditEmployee = () => {
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
   const [successMessage, setSuccessMessage] = useState<string>('');
 
-  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
+  const [baseUrl, SetBaseUrl] = useState("https://thay-db.vercel.app");
   const { token } = useAuth();
 
   useEffect(() => {
-    SetBaseUrl("https://thaydb.vercel.app");
+    SetBaseUrl("https://thay-db.vercel.app");
     axios.get(`${baseUrl}/api/employee/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,

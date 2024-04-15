@@ -25,7 +25,7 @@ const SignUp: React.FC = () => {
       return;
     }
 
-    fetch(`https://thaydb.vercel.app/api/auth/signup`, {
+    fetch(`https://thay-db.vercel.app/api/auth/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

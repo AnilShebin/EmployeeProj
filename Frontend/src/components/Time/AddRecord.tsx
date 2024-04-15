@@ -8,7 +8,7 @@ function AddRecord() {
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const { token } = useAuth();
-  const Backend = `https://thaydb.vercel.app/api`;
+  const Backend = `https://thay-db.vercel.app/api`;
 
   const handleCheckIn = async () => {
     try {

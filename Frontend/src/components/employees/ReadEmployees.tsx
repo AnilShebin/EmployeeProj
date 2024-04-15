@@ -20,10 +20,10 @@ const ReadEmployees: React.FC = () => {
   const isAdmin = roleName === "admin";
   const issuperuser = roleName === "superuser";
 
-  const [baseUrl, setBaseUrl] = useState("https://thaydb.vercel.app");
+  const [baseUrl, setBaseUrl] = useState("https://thay-db.vercel.app");
 
   useEffect(() => {
-    setBaseUrl("https://thaydb.vercel.app");
+    setBaseUrl("https://thay-db.vercel.app");
     axios
       .get(`${baseUrl}/api/employee/${id}`, {
         headers: {

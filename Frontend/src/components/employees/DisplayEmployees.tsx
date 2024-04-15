@@ -6,13 +6,13 @@ const DisplayEmployee = () => {
   const [data, setData] = useState<any[]>([]);
   const [deleteId, setDeleteId] = useState(null);
   const navigate = useNavigate();
-  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
+  const [baseUrl, SetBaseUrl] = useState("https://thay-db.vercel.app");
 
   const { roleName, token, isLoggedIn } = useAuth();
 
 
   function getData() {
-    SetBaseUrl("https://thaydb.vercel.app");
+    SetBaseUrl("https://thay-db.vercel.app");
     fetch(`${baseUrl}/api/employee`, {
       headers: {
         Authorization: `Bearer ${token}`,

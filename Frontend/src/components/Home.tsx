@@ -8,7 +8,7 @@ function Home() {
   const { token , employeeID } = useAuth();
 
   const employeecall= () => {
-  const baseUrl=(`https://thaydb.vercel.app`);
+  const baseUrl=(`https://thay-db.vercel.app`);
   axios
   .get(`${baseUrl}/api/employee/${employeeID}`, {
     headers: {

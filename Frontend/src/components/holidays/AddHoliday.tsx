@@ -17,7 +17,7 @@ export default function HolidayForm() {
   });
 
   const navigate = useNavigate();
-  const [baseUrl, SetBaseUrl] = useState("https://thaydb.vercel.app");
+  const [baseUrl, SetBaseUrl] = useState("https://thay-db.vercel.app");
   const { token } = useAuth();
   
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -74,7 +74,7 @@ export default function HolidayForm() {
   };
 
   useEffect(() => {
-    SetBaseUrl("https://thaydb.vercel.app");
+    SetBaseUrl("https://thay-db.vercel.app");
     setIsSubmitDisabled(hasValidationErrors());
   }, [holiday]);
 
