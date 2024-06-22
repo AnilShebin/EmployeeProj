@@ -41,7 +41,7 @@ const ReadEmployees: React.FC = () => {
 
   const { roleName, token } = useAuth();
   const isAdmin = roleName === "admin" || roleName === "superuser"; // Include superuser
-  const baseUrl = "http://localhost:8080"; // Your API base URL
+  const baseUrl = "https://employee-proj-eight.vercel.app"; // Your API base URL
 
   useEffect(() => {
     axios

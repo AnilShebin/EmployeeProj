@@ -26,7 +26,7 @@ export default function HolidayForm() {
   });
 
   const navigate = useNavigate();
-  const baseUrl = "http://localhost:8080"; // Set the base URL directly
+  const baseUrl = "https://employee-proj-eight.vercel.app"; // Set the base URL directly
   const { token } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {

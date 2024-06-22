@@ -15,7 +15,7 @@ interface RoleData {
 const ReadRole = () => {
   const [data, setData] = useState<RoleData[]>([]);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [baseUrl, setBaseUrl] = useState("http://localhost:8080");
+  const [baseUrl, setBaseUrl] = useState("https://employee-proj-eight.vercel.app");
   const { roleName, token } = useAuth();
   const isAdmin = roleName === "admin";
   const navigate = useNavigate();

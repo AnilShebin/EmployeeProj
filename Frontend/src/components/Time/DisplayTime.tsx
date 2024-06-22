@@ -12,7 +12,7 @@ const AttendanceRecord = () => {
   const [shouldFetchDefault, setShouldFetchDefault] = useState(false);
   const { token } = useAuth();
 
-  const Backend = `http://localhost:8080`;
+  const Backend = `https://employee-proj-eight.vercel.app`;
   const defaultUrl = `${Backend}/api/time`;
 
   const constructUrl = () => {

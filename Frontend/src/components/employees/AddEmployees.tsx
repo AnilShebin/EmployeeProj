@@ -32,7 +32,7 @@ export default function EmployeeForm() {
     password: "",
   });
   const navigate = useNavigate();
-  const [baseUrl, SetBaseUrl] = useState("http://localhost:8080");
+  const [baseUrl, SetBaseUrl] = useState("https://employee-proj-eight.vercel.app/");
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
@@ -133,7 +133,7 @@ export default function EmployeeForm() {
   };
 
   useEffect(() => {
-    SetBaseUrl("http://localhost:8080");
+    SetBaseUrl("https://employee-proj-eight.vercel.app");
     setIsSubmitDisabled(hasValidationErrors());
   }, [employee]);
 

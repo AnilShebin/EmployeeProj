@@ -29,11 +29,11 @@ const EditHoliday = () => {
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
   const [successMessage, setSuccessMessage] = useState<string>('');
 
-  const [baseUrl, setBaseUrl] = useState("http://localhost:8080");
+  const [baseUrl, setBaseUrl] = useState("https://employee-proj-eight.vercel.app");
   const { token } = useAuth();
 
   useEffect(() => {
-    setBaseUrl("http://localhost:8080");
+    setBaseUrl("https://employee-proj-eight.vercel.app");
     axios.get(`${baseUrl}/api/holiday/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,

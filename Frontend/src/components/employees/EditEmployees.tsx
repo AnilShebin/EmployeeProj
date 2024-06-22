@@ -31,7 +31,7 @@ const EditEmployee: React.FC = () => {
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
   const [successMessage, setSuccessMessage] = useState<string>('');
-  const [baseUrl] = useState("http://localhost:8080");
+  const [baseUrl] = useState("https://employee-proj-eight.vercel.app");
   const { token } = useAuth();
 
   useEffect(() => {

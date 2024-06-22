@@ -31,7 +31,7 @@ const AddRole: React.FC = () => {
   };
 
   const navigate = useNavigate();
-  const [baseUrl, setBaseUrl] = useState("http://localhost:8080");
+  const [baseUrl, setBaseUrl] = useState("https://employee-proj-eight.vercel.app");
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({});
   const [successMessage, setSuccessMessage] = useState<string>('');
@@ -97,7 +97,7 @@ const AddRole: React.FC = () => {
   };
 
   useEffect(() => {
-    setBaseUrl("http://localhost:8080");
+    setBaseUrl("https://employee-proj-eight.vercel.app");
     setIsSubmitDisabled(hasValidationErrors());
   }, [role]);
 

@@ -26,7 +26,7 @@ const SignUp: React.FC = () => {
       return;
     }
 
-    fetch(`http://localhost:8080/api/auth/signup`, {
+    fetch(`https://employee-proj-eight.vercel.app/api/auth/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

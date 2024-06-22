@@ -18,7 +18,7 @@ const CustomNavbar = () => {
     const navbarRef = useRef<any>(null);
 
     const employeecall = () => {
-        const baseUrl = (`http://localhost:8080`);
+        const baseUrl = (`https://employee-proj-eight.vercel.app`);
         axios
             .get(`${baseUrl}/api/employee/${employeeID}`, {
                 headers: {

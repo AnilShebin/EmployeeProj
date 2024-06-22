@@ -16,7 +16,7 @@ const EditRole: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/roles/${id}`, {
+      .get(`https://employee-proj-eight.vercel.app/api/roles/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -100,7 +100,7 @@ const EditRole: React.FC = () => {
       const updatedRole = { ...role, ruleRights: stringValue };
 
       axios
-        .put(`http://localhost:8080/api/roles/${id}`, updatedRole, {
+        .put(`https://employee-proj-eight.vercel.app/api/roles/${id}`, updatedRole, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -121,7 +121,7 @@ const EditRole: React.FC = () => {
   const updatePassword = (newPassword: string) => {
     axios
       .put(
-        `http://localhost:8080/api/passwords/${id}`,
+        `https://employee-proj-eight.vercel.app/api/passwords/${id}`,
         { newPassword },
         {
           headers: {

@@ -7,7 +7,7 @@ const DisplayEmployee = () => {
   const [data, setData] = useState<any[]>([]);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [baseUrl] = useState("http://localhost:8080");
+  const [baseUrl] = useState("https://employee-proj-eight.vercel.app");
   const { roleName, token, isLoggedIn } = useAuth();
 
   const getData = () => {
