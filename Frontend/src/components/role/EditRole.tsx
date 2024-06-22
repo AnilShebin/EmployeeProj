@@ -118,26 +118,6 @@ const EditRole: React.FC = () => {
     }
   };
 
-  const updatePassword = (newPassword: string) => {
-    axios
-      .put(
-        `https://employee-proj-eight.vercel.app/api/passwords/${id}`,
-        { newPassword },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Updated Password:", response.data);
-        setSuccessMessage("Password updated successfully.");
-      })
-      .catch((error) => {
-        console.error("Error updating Password:", error);
-      });
-  };
-
   const options = [
     { value: "Attendance", label: "Attendance" },
     { value: "EmpList", label: "EmpList" },

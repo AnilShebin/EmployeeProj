@@ -118,14 +118,13 @@ const ReadEmployees: React.FC = () => {
       return;
     }
     // Perform password change request here
-    // Example:
     axios
       .put(`${baseUrl}/api/employee/changePassword`, { id, newPassword }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response) => {
+      .then(() => {
         setSuccessMessage('Password changed successfully');
         setShowChangePassword(false);
       })
