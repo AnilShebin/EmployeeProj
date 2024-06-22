@@ -15,14 +15,15 @@ const timeRoutes = require('./controllers/timeController');
 const payslipRoutes = require('./controllers/payslipController');
 const passwordRoutes = require('./controllers/passwordController'); // Import password-related routes
 
-// Middleware
-app.use(cors({
-  origin: 'https://thaytech.vercel.app', // Allow requests from your frontend origin
+// CORS configuration
+const corsOptions = {
+  origin: 'https://thaytech.vercel.app',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: 'Content-Type, Authorization', // Add other headers as needed
-  credentials: true // Allow cookies to be sent
-}));
-app.use(express.json());
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true // Allow credentials (cookies, authorization headers, etc.) to be included in requests
+};
+
+app.use(cors(corsOptions));
 
 // Use authentication middleware for routes under '/api/auth'
 app.use('/api/auth', authRoutes);
