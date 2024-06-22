@@ -1,44 +1,42 @@
-.salary-slip {
-    width: 80%;
-    margin: auto;
-    border: 1px solid black;
-    padding: 20px;
-  }
-  
-  .salary-header, .salary-footer {
-    text-align: center;
-  }
-  
-  .employee-details {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    
-  }
-  
-  .salary-details > div {
-    width: 45%;
-  }
-  
-  .earnings {
-    padding: 10px;
-  
-
-  }
-  
-  h1, h2 {
-    margin: 0;
-    padding-bottom: 10px;
-  }
-  .dark-border {
-    border-color: #000 !important; /* Set the border color to black for HRA Amount row */
-  }
-  /* paySlip.css */
-
-.dark-bottom-border {
-  border-top: 1px solid #000; /* Set the bottom border to black for the "Netsalary" row */
-}
 /* paySlip.css */
 
+.salary-slip {
+  border: 1px solid black;
+  padding: 20px;
+  width: 100%; /* Adjusted to full width */
+  box-sizing: border-box; /* Ensures padding is included in width calculation */
+}
 
+.salary-header,
+.salary-footer {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
+.employee-details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.salary-details > div {
+  width: 45%;
+}
+
+.earnings {
+  padding: 10px;
+}
+
+h1,
+h2 {
+  margin: 0;
+  padding-bottom: 10px;
+}
+
+.dark-border {
+  border-bottom: 1px solid #000;
+}
+
+.dark-bottom-border {
+  border-top: 1px solid #000;
+}

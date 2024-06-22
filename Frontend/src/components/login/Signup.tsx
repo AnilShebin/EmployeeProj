@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './login.css';
 import AlertMessage from '../AlertMessage';
+import Footer from '../nav/Footer'; // Import your Footer component here
 
 const SignUp: React.FC = () => {
   const [employeeName, setEmployeeName] = useState<string>('');
@@ -25,7 +26,7 @@ const SignUp: React.FC = () => {
       return;
     }
 
-    fetch(`https://thay-db.vercel.app/api/auth/signup`, {
+    fetch(`http://localhost:8080/api/auth/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +56,7 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <div className="container" id="loginbox">
+    <div className="container" id="loginbox" style={{ marginBottom: '100px' }}>
       <div className="auth-wrapper">
         <div className="auth-inner">
           <form onSubmit={handleSubmit}>
@@ -113,16 +114,7 @@ const SignUp: React.FC = () => {
               </Link>
             </p>
           </form>
-        </div>
-      </div>
-      <style>
-        {`
-          body {
-            background: linear-gradient(to right, lightblue, #ffffff);
-          }
-        `}
-      </style>
-      {successMessage && (
+          {successMessage && (
             <AlertMessage
               message={successMessage}
               type="success"
@@ -136,6 +128,16 @@ const SignUp: React.FC = () => {
               onClose={() => setErrorMessage('')}
             />
           )}
+        </div>
+      </div>
+      <Footer /> {/* Include your Footer component here */}
+      <style>
+        {`
+          body {
+            background: linear-gradient(to right, lightblue, #ffffff);
+          }
+        `}
+      </style>
     </div>
   );
 };

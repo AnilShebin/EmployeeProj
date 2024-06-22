@@ -5,6 +5,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import './login.css';
 import { useAuth } from './AuthContext';
 import AlertMessage from '../AlertMessage';
+import Footer from '../nav/Footer'; // Import your Footer component here
 
 const Login: React.FC = () => {
   const [email, setemail] = useState<string>('');
@@ -22,7 +23,7 @@ const Login: React.FC = () => {
     }
 
     try {
-      const response = await fetch('https://thay-db.vercel.app/api/auth/login', {
+      const response = await fetch('http://localhost:8080/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -114,6 +115,7 @@ const Login: React.FC = () => {
           )}
         </div>
       </div>
+      <Footer /> {/* Include your Footer component here */}
       <style>
         {`
         body {

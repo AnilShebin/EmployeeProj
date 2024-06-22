@@ -84,7 +84,10 @@ npm run dev
 
 # Connect to your database and execute SQL commands
 ```bash
--- Create the 'roles' table
+-- Select the database
+USE thay;
+
+-- Create the 'roles' table if not exists
 CREATE TABLE IF NOT EXISTS roles (
   roleID INT AUTO_INCREMENT PRIMARY KEY,
   roleName VARCHAR(255) UNIQUE NOT NULL,
@@ -94,7 +97,7 @@ CREATE TABLE IF NOT EXISTS roles (
   ruleRights TEXT
 );
 
--- Create the 'employee' table
+-- Create the 'employee' table if not exists
 CREATE TABLE IF NOT EXISTS employee (
   id INT AUTO_INCREMENT PRIMARY KEY,
   employeeID INT UNIQUE NOT NULL,
@@ -110,12 +113,12 @@ CREATE TABLE IF NOT EXISTS employee (
   FOREIGN KEY (roleName) REFERENCES roles(roleName)
 );
 
--- Insert roles
+-- Insert roles if not exists
 INSERT INTO roles (roleID, roleName, roleStatus, createdDate, roleDescription, ruleRights)
 VALUES (1, 'admin', 'Active', '2024-01-07', 'Admin with All access', 'Attendance, EmpList, HolidayList, AttendanceSheet, Contact, About');
 
 INSERT INTO roles (roleID, roleName, roleStatus, createdDate, roleDescription, ruleRights)
-VALUES (2, 'employee', 'Active', '2024-01-07', 'Limited Access', 'Contact, About');
+VALUES (2, 'employee', 'Active', '2024-01-07', 'Limited Access', 'Contact, About, Attendance, HolidayList');
 
 INSERT INTO roles (roleID, roleName, roleStatus, createdDate, roleDescription, ruleRights)
 VALUES (3, 'superuser', 'Active', '2024-01-07', 'Only Viewable Access', 'EmpList, HolidayList, AttendanceSheet, Contact, About, View only');
@@ -123,14 +126,17 @@ VALUES (3, 'superuser', 'Active', '2024-01-07', 'Only Viewable Access', 'EmpList
 INSERT INTO roles (roleID, roleName, roleStatus, createdDate, roleDescription, ruleRights)
 VALUES (4, 'guest', 'Active', '2024-01-07', 'No access', 'Contact, About');
 
--- Create the 'holiday' table
+-- Create the 'holiday' table if not exists
 CREATE TABLE IF NOT EXISTS holiday (
   holidayID INT PRIMARY KEY AUTO_INCREMENT,
   holidayName VARCHAR(255) NOT NULL,
-  holidayDateTime VARCHAR(50) NOT NULL
+  holidayDay VARCHAR(255) NOT NULL,
+  holidayDate DATE NOT NULL,
+  mandatoryOptionalHoliday ENUM('MANDATORY', 'OPTIONAL') NOT NULL DEFAULT 'OPTIONAL',
+  serialNo INT
 );
 
--- Create the 'timerdetails' table
+-- Create the 'timerdetails' table if not exists
 CREATE TABLE IF NOT EXISTS timerdetails (
   timerID INT AUTO_INCREMENT PRIMARY KEY,
   employeeID INT,
@@ -140,6 +146,8 @@ CREATE TABLE IF NOT EXISTS timerdetails (
   date DATE
 );
 
+-- Describe holiday table to verify structure
+DESCRIBE holiday;
 ```
 
 # Contributors

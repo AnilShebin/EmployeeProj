@@ -5,25 +5,45 @@ import { useAuth } from "../login/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import AlertMessage from "../AlertMessage";
+import Footer from "../nav/Footer"; // Ensure to import your Footer component
+
+interface EmployeeProps {
+  employeeID: string;
+  employeeName: string;
+  employeeAge: string;
+  employeeDOJ: string;
+  employeeRemarks: string;
+  employeeAccruedLeaves: string;
+  employeeGender: string;
+  roleName: string;
+  email: string;
+}
 
 const ReadEmployees: React.FC = () => {
-  const { id } = useParams();
-  const [employee, setEmployee] = useState<any>({});
+  const { id } = useParams<{ id: string }>();
+  const [employee, setEmployee] = useState<EmployeeProps>({
+    employeeID: "",
+    employeeName: "",
+    employeeAge: "",
+    employeeDOJ: "",
+    employeeRemarks: "",
+    employeeAccruedLeaves: "",
+    employeeGender: "",
+    roleName: "",
+    email: "",
+  });
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [newPassword, setNewPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [showChangePassword, setShowChangePassword] = useState<boolean>(false);
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const navigate = useNavigate();
   const [successMessage, setSuccessMessage] = useState<string>('');
 
   const { roleName, token } = useAuth();
-  const isAdmin = roleName === "admin";
-  const issuperuser = roleName === "superuser";
-
-  const [baseUrl, setBaseUrl] = useState("https://thay-db.vercel.app");
+  const isAdmin = roleName === "admin" || roleName === "superuser"; // Include superuser
+  const baseUrl = "http://localhost:8080"; // Your API base URL
 
   useEffect(() => {
-    setBaseUrl("https://thay-db.vercel.app");
     axios
       .get(`${baseUrl}/api/employee/${id}`, {
         headers: {
@@ -40,14 +60,17 @@ const ReadEmployees: React.FC = () => {
   }, [id, baseUrl, token]);
 
   const updateEmployee = (id: string) => {
-    navigate("/EditEmployee/" + id);
+    navigate(`/EditEmployee/${id}`);
   };
+
   const backEmployee = () => {
     navigate(-1);
   };
+
   const confirmDelete = (id: string | null) => {
     setDeleteId(id);
   };
+
   const cancelDelete = () => {
     setDeleteId(null);
   };
@@ -74,43 +97,65 @@ const ReadEmployees: React.FC = () => {
 
   const handleCancelChangePassword = () => {
     setShowChangePassword(false);
-    setNewPassword("");
-    setConfirmPassword("");
   };
 
-  const handleConfirmChangePassword = () => {
-    if (newPassword === confirmPassword) {
-      axios
-        .put(
-          `${baseUrl}/api/password/${id}`,
-          {
-            newPassword: newPassword,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((response) => {
-          console.log("Password changed successfully:", response.data);
-          setShowChangePassword(false);
-          setNewPassword("");
-          setConfirmPassword("");
-          setSuccessMessage('Password Changed successfully.'); 
-        })
-        .catch((error) => {
-          console.error("Error changing password:", error);
-        });
-    } else {
-      console.error("New password and confirm password do not match");
+  const handleSuccessMessageClose = () => {
+    setSuccessMessage('');
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    if (name === 'newPassword') {
+      setNewPassword(value);
+    } else if (name === 'confirmPassword') {
+      setConfirmPassword(value);
     }
   };
 
+  const handleSubmitChangePassword = () => {
+    if (newPassword !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+    // Perform password change request here
+    // Example:
+    axios
+      .put(`${baseUrl}/api/employee/changePassword`, { id, newPassword }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setSuccessMessage('Password changed successfully');
+        setShowChangePassword(false);
+      })
+      .catch((error) => {
+        console.error("Error changing password:", error);
+      });
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const footer = document.querySelector('.footer');
+      if (footer) {
+        if (window.scrollY === 0) {
+          footer.classList.add('hidden');
+        } else {
+          footer.classList.remove('hidden');
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <div style={{ backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)', minHeight: "100vh" }}>
-      <div className="container mt-0" >
-      <div className="d-flex pt-2">
+    <div style={{ backgroundColor: 'linear-gradient(to right, lightblue, #ffffff)', minHeight: "100vh" }}>
+      <div className="container mt-0" style={{ paddingBottom: "100px" }}>
+        <div className="d-flex pt-2">
           <FontAwesomeIcon icon={faCircleChevronLeft} onClick={backEmployee} className="me-2" size="2x" />
           <h3 className="mb-3">Employee Details</h3>
         </div>
@@ -136,19 +181,19 @@ const ReadEmployees: React.FC = () => {
               <li className="list-group-item">
                 <strong>Gender:</strong> {employee.employeeGender}
               </li>
-            {isAdmin || issuperuser && (
-              <>
-                <li className="list-group-item">
-                  <strong>Remarks:</strong> {employee.employeeRemarks}
-                </li>
-                <li className="list-group-item">
-                  <strong>Accrued Leaves:</strong> {employee.employeeAccruedLeaves}
-                </li>
-                <li className="list-group-item">
-                  <strong>Role Name:</strong> {employee.roleName}
-                </li>
+              {isAdmin && (
+                <>
+                  <li className="list-group-item">
+                    <strong>Remarks:</strong> {employee.employeeRemarks}
+                  </li>
+                  <li className="list-group-item">
+                    <strong>Accrued Leaves:</strong> {employee.employeeAccruedLeaves}
+                  </li>
+                  <li className="list-group-item">
+                    <strong>Role Name:</strong> {employee.roleName}
+                  </li>
                 </>
-            )}
+              )}
             </ul>
             <div className="d-flex gap-3 ms-3 pt-3">
               {isAdmin && (
@@ -176,30 +221,34 @@ const ReadEmployees: React.FC = () => {
             </div>
             {showChangePassword && (
               <div>
-                <div className="mt-3">
-                  <label htmlFor="newPassword">New Password :</label>
+                <div className="form-group mt-3">
+                  <label htmlFor="newPassword">New Password</label>
                   <input
                     type="password"
+                    className="form-control"
                     id="newPassword"
+                    name="newPassword"
                     value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    onChange={handlePasswordChange}
                   />
                 </div>
-                <div className="mt-3">
-                  <label htmlFor="confirmPassword">Confirm Password:</label>
+                <div className="form-group mt-3">
+                  <label htmlFor="confirmPassword">Confirm Password</label>
                   <input
                     type="password"
+                    className="form-control"
                     id="confirmPassword"
+                    name="confirmPassword"
                     value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onChange={handlePasswordChange}
                   />
                 </div>
                 <div className="mt-3">
                   <button
-                    className="btn btn-success"
-                    onClick={handleConfirmChangePassword}
+                    className="btn btn-success ms-2"
+                    onClick={handleSubmitChangePassword}
                   >
-                    Change Password
+                    Submit
                   </button>
                   <button
                     className="btn btn-secondary ms-2"
@@ -211,12 +260,12 @@ const ReadEmployees: React.FC = () => {
               </div>
             )}
             {successMessage && (
-        <AlertMessage
-          message={successMessage}
-          type="success"
-          onClose={() => setSuccessMessage('')}
-        />
-      )}
+              <AlertMessage
+                message={successMessage}
+                type="success"
+                onClose={handleSuccessMessageClose}
+              />
+            )}
           </div>
         </div>
         {deleteId && (
@@ -233,6 +282,38 @@ const ReadEmployees: React.FC = () => {
           </div>
         )}
       </div>
+      <Footer className="footer" /> {/* Pass className to the Footer component */}
+      <style>
+        {`
+          body {
+            background: linear-gradient(to right, lightblue, #ffffff);
+          }
+          .modal-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          .modal-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+          }
+          .footer {
+            transition: transform 0.5s ease-in-out;
+          }
+          .footer.hidden {
+            transform: translateY(100%);
+          }
+        `}
+      </style>
     </div>
   );
 };

@@ -1,7 +1,8 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
-import { useNavigate } from 'react-router-dom'; // Import useHistory
+import { jwtDecode } from 'jwt-decode'; // Correctly import jwtDecode
+import { useNavigate } from 'react-router-dom';
+import AlertMessage from '../AlertMessage'; // Adjust the path based on your file structure
 
 interface AuthContextProps {
   isLoggedIn: boolean | null;
@@ -26,75 +27,117 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [employeeID, setEmployeeID] = useState<string | null>(null);
   const [roleName, setRoleName] = useState<string | null>(null);
-
+  const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
 
-useEffect(() => {
-  const token = Cookies.get('token');
-  if (token) {
+  useEffect(() => {
+    const token = Cookies.get('token');
+    if (token) {
+      try {
+        const decodedToken: any = jwtDecode(token);
+        setEmployeeID(decodedToken.employeeID);
+        setRoleName(decodedToken.roleName);
+        setIsLoggedIn(true);
+
+        // Calculate token expiration time to 3 hours (in seconds)
+        const expirationTimeInSeconds = 3 * 60 * 60;
+
+        // Set alert timeout to show 10 minutes (600 seconds) before expiration
+        const alertTimeInSeconds = expirationTimeInSeconds - 10 * 60;
+
+        const alertTimeout = setTimeout(() => {
+          setShowAlert(true);
+        }, alertTimeInSeconds * 1000);
+
+        // Set timeout to automatically log out after expiration
+        const logoutTimeout = setTimeout(() => {
+          logout();
+        }, expirationTimeInSeconds * 1000);
+
+        // Clear timeouts on component unmount to prevent memory leaks
+        return () => {
+          clearTimeout(logoutTimeout);
+          clearTimeout(alertTimeout);
+        };
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        logout();
+      }
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+  const login = (token: string) => {
+    // Set the token in cookies
+    Cookies.set('token', token);
+
     try {
       const decodedToken: any = jwtDecode(token);
       setEmployeeID(decodedToken.employeeID);
       setRoleName(decodedToken.roleName);
       setIsLoggedIn(true);
 
-      // Calculate expiration time in milliseconds
-      const expirationTimeInHours = 1;
-      const expirationInMilliseconds = expirationTimeInHours * 60 * 60 * 1000;
+      // Calculate token expiration time to 3 hours (in seconds)
+      const expirationTimeInSeconds = 3 * 60 * 60;
 
-      // Set a timeout to automatically log out after the specified expiration time
-      setTimeout(() => {
+      // Set alert timeout to show 10 minutes (600 seconds) before expiration
+      const alertTimeInSeconds = expirationTimeInSeconds - 10 * 60;
+
+      const alertTimeout = setTimeout(() => {
+        setShowAlert(true);
+      }, alertTimeInSeconds * 1000);
+
+      // Set timeout to automatically log out after expiration
+      const logoutTimeout = setTimeout(() => {
         logout();
-      }, expirationInMilliseconds);
+      }, expirationTimeInSeconds * 1000);
+
+      // Clear timeouts on component unmount to prevent memory leaks
+      return () => {
+        clearTimeout(logoutTimeout);
+        clearTimeout(alertTimeout);
+      };
     } catch (error) {
       console.error('Error decoding token:', error);
       logout();
     }
-  } else {
-    setIsLoggedIn(false);
-  }
-}, []);
-
-const login = (token: string) => {
-  const expirationTimeInHours = 1;
-  const expirationInMinutes = expirationTimeInHours * 60;
-
-  Cookies.set('token', token, { expires: expirationInMinutes });
-
-  try {
-    const decodedToken: any = jwtDecode(token);
-    setEmployeeID(decodedToken.employeeID);
-    setRoleName(decodedToken.roleName);
-    setIsLoggedIn(true);
-
-    // Calculate expiration time in milliseconds
-    const expirationInMilliseconds = expirationInMinutes * 60 * 1000;
-
-    // Set a timeout to automatically log out after the specified expiration time
-    setTimeout(() => {
-      logout();
-    }, expirationInMilliseconds);
-  } catch (error) {
-    console.error('Error decoding token:', error);
-    logout();
-  }
-};
+  };
 
   const logout = () => {
     Cookies.remove('token');
     setIsLoggedIn(false);
     setEmployeeID(null);
     setRoleName(null);
-    navigate('/'); // Redirect to the login page
+    setShowAlert(false);
+    navigate('/login'); // Redirect to /login after logout
+  };
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, roleName, employeeID, token: Cookies.get('token') || null, login, logout }}>
-      {children}
-    </AuthContext.Provider>
+    <>
+      {showAlert && (
+        <AlertMessage
+          message="Your session will expire soon. Please refresh or login again."
+          type="error"
+          onClose={handleCloseAlert}
+          autoCloseDuration={5000}
+        />
+      )}
+      <AuthContext.Provider
+        value={{ isLoggedIn, roleName, employeeID, token: Cookies.get('token') || null, login, logout }}
+      >
+        {children}
+      </AuthContext.Provider>
+    </>
   );
 };
+
+export default AuthProvider;

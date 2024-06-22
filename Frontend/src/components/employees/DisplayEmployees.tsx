@@ -1,110 +1,127 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../login/AuthContext";
+import Footer from "../nav/Footer";
 
 const DisplayEmployee = () => {
   const [data, setData] = useState<any[]>([]);
-  const [deleteId, setDeleteId] = useState(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [baseUrl, SetBaseUrl] = useState("https://thay-db.vercel.app");
-
+  const [baseUrl] = useState("http://localhost:8080");
   const { roleName, token, isLoggedIn } = useAuth();
 
-
-  function getData() {
-    SetBaseUrl("https://thay-db.vercel.app");
+  const getData = () => {
     fetch(`${baseUrl}/api/employee`, {
       headers: {
         Authorization: `Bearer ${token}`,
-      }
+      },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch employees");
+        }
+        return res.json();
+      })
       .then((data) => {
         setData(data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }
+  };
 
   const readEmployee = (id: string) => {
-    navigate("/ReadEmployee/" + id);
-  }
+    navigate(`/ReadEmployee/${id}`);
+  };
 
-  const confirmDelete = (id: any) => {
+  const confirmDelete = (id: string) => {
     setDeleteId(id);
-  }
+  };
 
   const cancelDelete = () => {
     setDeleteId(null);
-  }
+  };
 
   const executeDelete = (id: string) => {
-    fetch(`${baseUrl}/api/employee/` + id, {
+    fetch(`${baseUrl}/api/employee/${id}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
-      .then(() => {
-        getData();
-        setDeleteId(null);
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to delete employee");
+        }
+        getData(); // Refresh data after deletion
+        setDeleteId(null); // Clear delete confirmation
       })
       .catch((err) => {
-        console.log(err.message)
+        console.error("Error deleting employee:", err.message);
       });
-  }
+  };
 
-  const AddEmployees = () => {
+  const addEmployee = () => {
     navigate("/AddEmployee/");
-  }
+  };
 
   useEffect(() => {
     getData();
-  }, [data]);
+  }, [baseUrl, token]);
 
   return (
     <>
-      <div className="d-flex align-items-end flex-column" style={{ backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)' }}>
-        {isLoggedIn && (roleName === 'admin') && <button className="btn btn-info mt-3 me-4" onClick={AddEmployees}> + Add Employee</button>}
+      <div style={{ background: 'linear-gradient(to right, lightblue, #ffffff)', padding: '20px' }}>
+        <div className="container">
+          <div className="row justify-content-end">
+            <div className="col-md-6 d-flex justify-content-end">
+              {isLoggedIn && roleName === 'admin' && (
+                <button className="btn btn-info mt-3" onClick={addEmployee}>Add Employee</button>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-      <div style={{ backgroundImage: 'linear-gradient(to right, lightblue, #ffffff)', padding: "50px", minHeight: "100vh" }}>
-        <table className="table table-hover table-bordered table-striped text-center">
-          <thead>
-            <tr>
-              <th>Employee ID</th>
-              <th>Employee Name</th>
-              {isLoggedIn && (roleName === 'admin' || roleName === 'superuser') &&
-                <th>Actions</th>
-              }
-            </tr>
-          </thead>
-          <tbody className="table-group-divider">
-            {data.map((d, i) => (
-              <tr key={i}>
-                <td>{d.employeeID}</td>
-                <td>{d.employeeName}</td>
-
-                <td className="col-4">
-                  <input
-                    type="button"
-                    className="btn btn-success me-4"
-                    onClick={() => readEmployee(d.employeeID)}
-                    value="view"
-                  />
-                  {isLoggedIn && roleName === "admin" &&
-                    <input
-                      type="button"
-                      className="btn btn-danger me-2"
-                      onClick={() => confirmDelete(d.employeeID)}
-                      value="Delete"
-                    />
-                  }
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div style={{ background: 'linear-gradient(to right, lightblue, #ffffff)', minHeight: "100vh", padding: "20px" }}>
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col">
+              <table className="table table-hover table-bordered table-striped text-center">
+                <thead>
+                  <tr>
+                    <th>Employee ID</th>
+                    <th>Employee Name</th>
+                    {isLoggedIn && (roleName === 'admin' || roleName === 'superuser') && <th>Actions</th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((employee,) => (
+                    <tr key={employee.employeeID}>
+                      <td>{employee.employeeID}</td>
+                      <td>{employee.employeeName}</td>
+                      {isLoggedIn && roleName === "admin" && (
+                        <td>
+                          <button
+                            className="btn btn-success me-2"
+                            onClick={() => readEmployee(employee.employeeID)}
+                          >
+                            View
+                          </button>
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => confirmDelete(employee.employeeID)}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
       {deleteId && (
         <div className="modal-background">
@@ -119,6 +136,36 @@ const DisplayEmployee = () => {
           </div>
         </div>
       )}
+      <Footer />
+      <style>
+        {`
+          body {
+            background: linear-gradient(to right, lightblue, #ffffff);
+          }
+          .btn {
+            margin-bottom: 10px;
+          }
+          .modal-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+          }
+          .modal-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+            text-align: center;
+          }
+        `}
+      </style>
     </>
   );
 };

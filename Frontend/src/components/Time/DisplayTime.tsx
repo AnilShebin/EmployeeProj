@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../login/AuthContext";
+import Footer from "../nav/Footer"; // Import your Footer component here
 
 const AttendanceRecord = () => {
   const [data, setData] = useState<any[]>([]);
@@ -11,7 +12,7 @@ const AttendanceRecord = () => {
   const [shouldFetchDefault, setShouldFetchDefault] = useState(false);
   const { token } = useAuth();
 
-  const Backend = `https://thay-db.vercel.app`;
+  const Backend = `http://localhost:8080`;
   const defaultUrl = `${Backend}/api/time`;
 
   const constructUrl = () => {
@@ -82,32 +83,34 @@ const AttendanceRecord = () => {
   }, [shouldFetchDefault, token]);
 
   return (
-    <>
-
-      <div style={{ padding: "50px" }}>
-        <div className="search-section d-flex gap-1">
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div className="container flex-grow-1" style={{ padding: "50px" }}>
+        <div className="search-section d-flex gap-1 mb-3">
           <input
             type="text"
             placeholder="Enter Employee ID"
             value={searchEmployeeID || ''}
             onChange={(e) => setSearchEmployeeID(Number(e.target.value))}
+            className="form-control rounded-input"
           />
           <input
             type="date"
             placeholder="Start Date"
             value={startDate || ''}
             onChange={(e) => setStartDate(e.target.value)}
+            className="form-control rounded-input"
           />
           <input
             type="date"
             placeholder="End Date"
             value={endDate || ''}
             onChange={(e) => setEndDate(e.target.value)}
+            className="form-control rounded-input"
           />
-          <button onClick={handleSearch} className="btn btn-primary ms-2">search</button>
+          <button onClick={handleSearch} className="btn btn-primary ms-2">Search</button>
           <button onClick={clearSearchCriteria} className="btn btn-secondary ms-2">Clear</button>
         </div>
-        {errorMessage && <div className="mt-2" style={{ color: "red" }}>{errorMessage}</div>}
+        {errorMessage && <div className="mt-2 text-danger">{errorMessage}</div>}
 
         <table className="table table-hover table-bordered table-striped text-center mt-4">
           <thead>
@@ -116,7 +119,7 @@ const AttendanceRecord = () => {
               <th>Date</th>
               <th>CheckInDateTime</th>
               <th>CheckOutDateTime</th>
-              <th>totalWorkingHours</th>
+              <th>Total Working Hours</th>
             </tr>
           </thead>
           <tbody className="table-group-divider">
@@ -131,12 +134,25 @@ const AttendanceRecord = () => {
             ))}
           </tbody>
         </table>
-        <style>
-          {`body {  background: linear-gradient(to right, lightblue, #ffffff);`}
-        </style>
-      </div >
-
-    </>
+      </div>
+      <style>
+        {`
+          body {
+            background: linear-gradient(to right, lightblue, #ffffff);
+            margin: 0;
+            padding: 0;
+          }
+          .container {
+            flex-grow: 1;
+          }
+          .rounded-input {
+            border-radius: 15px;
+            padding: 5px;
+          }
+        `}
+      </style>
+      <Footer /> {/* Add the Footer component */}
+    </div>
   );
 };
 

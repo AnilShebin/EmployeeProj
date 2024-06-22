@@ -2,14 +2,16 @@ import React, { useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const AlertMessage: React.FC<{
+export interface AlertMessageProps {
   message: string;
   type: 'success' | 'error';
   onClose: () => void;
   autoCloseDuration?: number;
-}> = ({ message, type, onClose, autoCloseDuration = 2000 }) => {
+}
+
+const AlertMessage: React.FC<AlertMessageProps> = ({ message, type, onClose, autoCloseDuration = 2000 }) => {
   useEffect(() => {
-    let toastId:any;
+    let toastId: any;
 
     if (type === 'success') {
       toastId = toast.success(message, {
@@ -27,7 +29,7 @@ const AlertMessage: React.FC<{
       toast.dismiss(toastId);
     };
   }, [message, type, autoCloseDuration, onClose]);
-
+ 
   return (
     <div
       style={{
